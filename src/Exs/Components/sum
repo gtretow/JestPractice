@@ -1,0 +1,116 @@
+const sum = require("./sum");
+
+test("adds 1 + 2 to equal 3", () => {
+  expect(sum(1, 2)).toBe(3);
+});
+
+test("dois mais dois é quatro", () => {
+  expect(2 + 2).toBe(4);
+});
+
+//to check the value of an object, use toEqual
+
+test("atribuição de objeto", () => {
+  const data = { one: 1 };
+  data["two"] = 2;
+  expect(data).toEqual({ one: 1, two: 2 });
+});
+
+test("adicionando números positivos não é zero", () => {
+  for (let a = 1; a < 10; a++) {
+    for (let b = 1; b < 10; b++) {
+      expect(a + b).not.toBe(0);
+    }
+  }
+});
+
+/* 
+In tests, you sometimes need to distinguish between undefined, null, and false, but you sometimes do not want to treat these differently. Jest contém auxiliares que permitem você ser explícito sobre o que quer.
+
+    toBeNull corresponde a apenas null
+    toBeUndefined corresponde a apenas undefined
+    toBeDefined é o oposto de toBeUndefined
+    toBeTruthy combina com qualquer coisa que uma instrução if trata como verdadeiro
+    toBeFalsy combina com qualquer coisa que uma instrução if trata como falso */
+
+test("nulo", () => {
+  const n = null;
+  expect(n).toBeNull();
+  expect(n).toBeDefined();
+  expect(n).not.toBeUndefined();
+  expect(n).not.toBeTruthy();
+  expect(n).toBeFalsy();
+});
+
+test("zero", () => {
+  const z = 0;
+  expect(z).not.toBeNull();
+  expect(z).toBeDefined();
+  expect(z).not.toBeUndefined();
+  expect(z).not.toBeTruthy();
+  expect(z).toBeFalsy();
+});
+
+//A maioria das formas de comparar números têm "matcher" equivalentes.
+
+test("dois mais dois", () => {
+  const value = 2 + 2;
+  expect(value).toBeGreaterThan(3);
+  expect(value).toBeGreaterThanOrEqual(3.5);
+  expect(value).toBeLessThan(5);
+  expect(value).toBeLessThanOrEqual(4.5);
+
+  // toBe e toEqual são equivalentes para números
+  expect(value).toBe(4);
+  expect(value).toEqual(4);
+});
+
+//Para igualdade de ponto flutuante, use toBeCloseTo em vez de toEqual, porque você não quer um teste dependa de um pequeno erro de arredondamento.
+
+test("adicionando números de ponto flutuante", () => {
+  const value = 0.1 + 0.2;
+  //expect(value).toBe(0.3);     Isso não vai funcionar por causa de um erro de arredondamento
+  expect(value).toBeCloseTo(0.3); // Isso funciona.
+});
+
+//Você pode verificar strings contra expressões regulares(regex) com toMatch:
+test("não existe I em Team", () => {
+  expect("team").not.toMatch(/I/);
+});
+
+test('mas existe "stop" em Christoph', () => {
+  expect("Christoph").toMatch(/stop/);
+});
+
+//You can check if an array or iterable contains a particular item using toContain:
+
+const shoppingList = [
+  "diapers",
+  "kleenex",
+  "trash bags",
+  "paper towels",
+  "milk",
+];
+
+test("the shopping list has milk on it", () => {
+  expect(shoppingList).toContain("milk");
+  expect(new Set(shoppingList)).toContain("milk");
+});
+
+//If you want to test whether a particular function throws an error when it's called, use toThrow.
+
+function compileAndroidCode() {
+  throw new Error("you are using the wrong JDK");
+}
+
+test("compiling android goes as expected", () => {
+  expect(() => compileAndroidCode()).toThrow();
+  expect(() => compileAndroidCode()).toThrow(Error);
+
+  // You can also use the exact error message or a regexp
+  expect(() => compileAndroidCode()).toThrow("you are using the wrong JDK");
+  expect(() => compileAndroidCode()).toThrow(/JDK/);
+});
+
+/* Lista completa de matchers: */
+// https://jestjs.io/docs/pt-BR/expect

@@ -1,0 +1,67 @@
+/* eslint-disable no-undef */
+/* O padrão assíncrono mais comum são as "callbacks". */
+
+// Don't do this!
+/* test('the data is peanut butter', () => {
+    function callback(data) {
+      expect(data).toBe('peanut butter');
+    }
+  
+    fetchData(callback);
+  }); */
+
+//O problema é que o teste será concluído logo que fetchData completa, antes de sequer chamar a "callback".
+
+test("the data is peanut butter", (done) => {
+  function callback(data) {
+    try {
+      expect(data).toBe("peanut butter");
+      done();
+    } catch (error) {
+      done(error);
+    }
+  }
+
+  fetchData(callback);
+});
+
+//Se seu código usa "promises", ou promessas, há uma maneira mais simples para lidar com testes assíncronos. Retorne uma promise do seu teste, e o Jest vai esperar essa promise ser resolvida. Se a promessa for rejeitada, o teste automaticamente irá falhar.
+
+test("the data is peanut butter", () => {
+  return fetchData().then((data) => {
+    expect(data).toBe("peanut butter");
+  });
+});
+
+//CASO vc queira que a promise seja rejeitada, use .catch
+
+test("the fetch fails with an error", () => {
+  expect.assertions(1);
+  return fetchData().catch((e) => expect(e).toMatch("error"));
+});
+
+//Como alternativa, você pode usar async e await em seus testes. Para escrever um teste assíncrono, basta usar a palavra-chave async na frente da função passada para test. Por exemplo, o mesmo cenário de fetchData pode ser testado com:
+
+test("the data is peanut butter", async () => {
+  const data = await fetchData();
+  expect(data).toBe("peanut butter");
+});
+
+test("the fetch fails with an error", async () => {
+  expect.assertions(1);
+  try {
+    await fetchData();
+  } catch (e) {
+    expect(e).toMatch("error");
+  }
+});
+
+//You can combine async and await with .resolves or .rejects.
+
+test("the data is peanut butter", async () => {
+  await expect(fetchData()).resolves.toBe("peanut butter");
+});
+
+test("the fetch fails with an error", async () => {
+  await expect(fetchData()).rejects.toThrow("error");
+});
