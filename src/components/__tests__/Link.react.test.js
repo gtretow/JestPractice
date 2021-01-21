@@ -1,8 +1,16 @@
 import React from "react";
 import renderer from "react-test-renderer";
-import Link from "./Link.react";
+import Link from "../Link.react";
 
-it("will fail every time", () => {
+// Caso de teste atualizado com um Link para um endereço diferente
+it("renderiza corretamente", () => {
+  const tree = renderer
+    .create(<Link page="http://www.instagram.com">Instagram</Link>)
+    .toJSON();
+  expect(tree).toMatchSnapshot();
+});
+
+/* it("will fail every time", () => {
   const user = {
     createdAt: new Date(),
     id: Math.floor(Math.random() * 20),
@@ -19,9 +27,9 @@ exports[`will fail every time 1`] = `
     "id": 3,
     "name": "LeBron James",
   }
-  `;
+  `; */
 
-it("will check the matchers and pass", () => {
+/* it("will check the matchers and pass", () => {
   const user = {
     createdAt: new Date(),
     id: Math.floor(Math.random() * 20),
@@ -32,16 +40,16 @@ it("will check the matchers and pass", () => {
     createdAt: expect.any(Date),
     id: expect.any(Number),
   });
-});
+}); */
 
 // Snapshot
-exports[`will check the matchers and pass 1`] = `
+/* exports[`will check the matchers and pass 1`] = `
   Object {
     "createdAt": Any<Date>,
     "id": Any<Number>,
     "name": "LeBron James",
   }
-  `;
+  `; */
 //detalhes sobre tests com snapshot
 
 /* Por exemplo, se você tem um componente Clock que usa Date.now(), o snapshot gerado a partir deste componente será diferente cada vez que o caso de teste é executado. Neste caso podemos simular o método Date.now() para retornar um valor consistente toda vez que o teste é executado:
